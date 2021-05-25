@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "702357794196",
+    "project_id": "sinta-project",
+    "storage_bucket": "sinta-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702357794196:android:cf79bb8f0156ec0d0d7381",
+        "android_client_info": {
+          "package_name": "com.example.sinta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702357794196-pmusm99n845peapb5s6c8tvef48n0303.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXy9GqixNyIPt3kE9hkdnWi5Iea0LP0jc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702357794196-pmusm99n845peapb5s6c8tvef48n0303.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
