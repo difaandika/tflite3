@@ -8,21 +8,23 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 
 class ScanImage extends StatefulWidget {
+  final CameraDescription? camera;
+  const ScanImage({Key? key, this.camera}) : super(key: key);
+
   @override
   _ScanImageState createState() => _ScanImageState();
 }
 
 class _ScanImageState extends State<ScanImage> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
+  double zoom = 0.0;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
     _controller = CameraController(
-      firstCamera,
+      widget.camera!,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -34,7 +36,7 @@ class _ScanImageState extends State<ScanImage> {
 
   loadModel() async {
     await Tflite.loadModel(
-      model: "assets/model_unquant.tflite",
+      model: "assets/model_fp16.tflite",
       labels: "assets/labels.txt",
       numThreads: 1,
     ).then((value) {});
@@ -47,10 +49,8 @@ class _ScanImageState extends State<ScanImage> {
       (await getTemporaryDirectory()).path,
       '${DateTime.now()}.png',
     );
-
-    await _controller.takePicture(path);
-
-    classifyImage(File(path), context);
+    final image = await _controller.takePicture();
+    classifyImage(File(image.path), context);
   }
 
   getImage(BuildContext context) async {
@@ -85,79 +85,101 @@ class _ScanImageState extends State<ScanImage> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Text(
-            'TF Lite',
-            style: TextStyle(
-              color: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.chevron_left,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ),
-        ),
-        body: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: CameraPreview(_controller),
+          body: FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CameraPreview(_controller),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 200,
-                          child: IconButton(
-                            iconSize: 60,
-                            onPressed: () {
-                              // loadModel(context);
-                            },
-                            icon: Icon(Icons.camera, color: Colors.transparent),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            height: 200,
+                            child: IconButton(
+                              iconSize: 60,
+                              onPressed: () {
+                                // loadModel(context);
+                              },
+                              icon:
+                                  Icon(Icons.camera, color: Colors.transparent),
+                            ),
                           ),
-                        ),
-                        Container(
-                          height: 200,
-                          child: IconButton(
-                            iconSize: 60,
-                            onPressed: () {
-                              takePhoto(context);
-                            },
-                            icon: Icon(Icons.camera),
+                          Container(
+                            height: 200,
+                            child: IconButton(
+                              iconSize: 60,
+                              onPressed: () {
+                                takePhoto(context);
+                              },
+                              icon: Icon(Icons.camera),
+                            ),
                           ),
-                        ),
-                        Container(
-                          height: 200,
-                          child: IconButton(
-                            iconSize: 60,
-                            onPressed: () {
-                              getImage(context);
-                            },
-                            icon: Icon(Icons.image),
+                          Container(
+                            height: 200,
+                            child: IconButton(
+                              iconSize: 60,
+                              onPressed: () {
+                                getImage(context);
+                              },
+                              icon: Icon(Icons.image),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-      ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton:
+              Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Slider(
+              activeColor: Colors.red,
+              value: zoom,
+              onChanged: (value) {
+                print(value);
+
+                value = value * 10;
+                if (value <= 8.0 && value >= 1.0) {
+                  _controller.setZoomLevel(value);
+                }
+
+                setState(() => zoom = value / 10);
+              },
+            ),
+          ])),
     ));
   }
 

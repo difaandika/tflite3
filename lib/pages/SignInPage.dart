@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:sinta/Services/Auth_Service.dart';
 import 'package:sinta/pages/HomePage.dart';
+import 'package:camera/camera.dart';
 
 class SignInPage extends StatefulWidget {
-  SignInPage({Key? key}) : super(key: key);
+  final CameraDescription? camera;
+  const SignInPage({Key? key, this.camera}) : super(key: key);
 
   @override
   _SignInPageState createState() => _SignInPageState();
@@ -26,14 +28,14 @@ class _SignInPageState extends State<SignInPage> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          color: Colors.black,
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Hello.',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 48,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.5,
@@ -42,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
               Text(
                 'Welcome back',
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w300,
                     fontSize: 36,
                     letterSpacing: 5),
@@ -59,7 +61,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               textItem("Password", _pwdController, true),
               SizedBox(
-                height: 20,
+                height: 40,
               ),
               colorButton(),
               SizedBox(
@@ -67,7 +69,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               Text(
                 "Or",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.black, fontSize: 18),
               ),
               buttonItem("assets/google.svg", "Continue with Google", 25),
               SizedBox(
@@ -79,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                   Text(
                     "Don't have an Account? ",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16,
                     ),
                   ),
@@ -93,7 +95,7 @@ class _SignInPageState extends State<SignInPage> {
                     child: Text(
                       "SignUp",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -103,14 +105,6 @@ class _SignInPageState extends State<SignInPage> {
               ),
               SizedBox(
                 height: 10,
-              ),
-              Text(
-                "Forgot Password?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
               ),
             ],
           ),
@@ -132,7 +126,10 @@ class _SignInPageState extends State<SignInPage> {
           });
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (builder) => HomePage()),
+              MaterialPageRoute(
+                  builder: (builder) => HomePage(
+                        camera: widget.camera,
+                      )),
               (route) => false);
         } catch (e) {
           final snackbar = SnackBar(content: Text(e.toString()));
@@ -177,7 +174,7 @@ class _SignInPageState extends State<SignInPage> {
         width: MediaQuery.of(context).size.width - 60,
         height: 60,
         child: Card(
-          color: Colors.black,
+          color: Colors.blue[900],
           elevation: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -221,13 +218,13 @@ class _SignInPageState extends State<SignInPage> {
         obscureText: obscureText,
         style: TextStyle(
           fontSize: 17,
-          color: Colors.white,
+          color: Colors.black,
         ),
         decoration: InputDecoration(
           labelText: labeltext,
           labelStyle: TextStyle(
             fontSize: 17,
-            color: Colors.white,
+            color: Colors.black,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),

@@ -1,21 +1,24 @@
 import 'package:sinta/pages/HomePage.dart';
 import 'package:sinta/pages/SignInPage.dart';
-import 'package:sinta/pages/SignUpPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sinta/pages/scan_image.dart';
+import 'package:camera/camera.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(MyApp(
+    camera: firstCamera,
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
-
+  final CameraDescription? camera;
+  const MyApp({Key? key, this.camera}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -26,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   void signup() async {
     try {
       await firebaseAuth.createUserWithEmailAndPassword(
-          email: "devstackin1@gmail.com", password: "123456");
+          email: "dip@gmail.com", password: "123456");
     } catch (e) {
       print(e);
     }
@@ -42,9 +45,13 @@ class _MyAppState extends State<MyApp> {
           return CircularProgressIndicator();
         }
         if (userSnapshot.hasData) {
-          return ScanImage();
+          return HomePage(
+            camera: widget.camera,
+          );
         }
-        return SignInPage();
+        return SignInPage(
+          camera: widget.camera,
+        );
       },
     ));
   }

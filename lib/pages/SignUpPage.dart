@@ -1,11 +1,12 @@
 import 'package:sinta/pages/HomePage.dart';
 import 'package:sinta/pages/SignInPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:camera/camera.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key? key}) : super(key: key);
+  final CameraDescription? camera;
+  const SignUpPage({Key? key, this.camera}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -25,7 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          color: Colors.black,
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -33,22 +34,22 @@ class _SignUpPageState extends State<SignUpPage> {
                 "Sign Up",
                 style: TextStyle(
                   fontSize: 35,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(
                 height: 70,
               ),
-              textItem("Name....", _nameController, false),
+              textItem("Name", _nameController, false),
               SizedBox(
                 height: 15,
               ),
-              textItem("Email....", _emailController, false),
+              textItem("Email", _emailController, false),
               SizedBox(
                 height: 15,
               ),
-              textItem("Password...", _pwdController, true),
+              textItem("Password", _pwdController, true),
               SizedBox(
                 height: 40,
               ),
@@ -62,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Text(
                     "If you alredy have an Account? ",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16,
                     ),
                   ),
@@ -76,7 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -107,7 +108,10 @@ class _SignUpPageState extends State<SignUpPage> {
           });
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (builder) => HomePage()),
+              MaterialPageRoute(
+                  builder: (builder) => HomePage(
+                        camera: widget.camera,
+                      )),
               (route) => false);
         } catch (e) {
           final snackbar = SnackBar(content: Text(e.toString()));
@@ -153,13 +157,13 @@ class _SignUpPageState extends State<SignUpPage> {
         obscureText: obscureText,
         style: TextStyle(
           fontSize: 17,
-          color: Colors.white,
+          color: Colors.black,
         ),
         decoration: InputDecoration(
           labelText: labeltext,
           labelStyle: TextStyle(
             fontSize: 17,
-            color: Colors.white,
+            color: Colors.black,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),

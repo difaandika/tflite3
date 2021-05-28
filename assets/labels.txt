@@ -1,0 +1,21 @@
+0 Be careful, construction project ahead
+1 Be careful of landslides from the side
+2 There is dead end ahead
+3 It is prohibited to give voice signal
+4 It is prohibited to enter this area
+5 Stop before passing through the toll gate
+6 There is church ahead
+7 Be careful and slow down
+8 Be careful, the area is prone to earthquakes
+9 Be careful, the area is prone to volcano eruption
+10 Be careful, the area is prone to tsunami
+11 Prohibited for pedestrians
+12 Prohibited for bicycle users
+13 Prohibited for motorcyle and car users
+14 Prohibited for car users
+15 Prohibited for motorcyle users
+16 There is mosque ahead
+17 There is temple for hindu people ahead
+18 Be careful, the area is prone to accidents
+19 There is hospital ahead
+20 There is monastery for budhist people ahead
